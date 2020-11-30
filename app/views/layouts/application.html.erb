@@ -1,0 +1,42 @@
+<%
+  locale = params[:locale]&.to_sym || I18n.locale
+  message_key = :web
+  messages = I18n.backend.send(:translations)[locale][message_key]
+  envs = {
+    env: Rails.env,
+    messages: { locale => messages },
+    availableLocales: I18n.backend.send(:translations)
+      .each_with_object(Hash.new) do |(key, messages), memo| web_msgs = messages[:web]; memo[key] = web_msgs[:name] end
+      .compact,
+    authTarget: APPLICATION[:auth_target],
+    serviceName: APPLICATION[:service_name],
+    vueApp: @vue_app,
+    root: {
+      name: APPLICATION[:root][:name], href: APPLICATION[:root][:href]
+    },
+    app: APPLICATION[:app]
+  }
+  i18nPageMetaKey = "pages.#{params[:controller]}.#{params[:action]}.meta"
+%>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      <%= t("#{i18nPageMetaKey}.title", (params[:page_meta] || {}).merge(default: 'dnmsk')) %>
+    </title>
+    <meta name='description' content='<%= t("#{i18nPageMetaKey}.description", (params[:page_meta] || {}).merge(default: '')) %>' />
+    <meta name='keywords' content='<%= t("#{i18nPageMetaKey}.keywords", (params[:page_meta] || {}).merge(default: '')) %>' />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="no-referrer-when-downgrade" name="referrer" />
+    <script>window.envs = <%= raw(envs.to_json) %>;</script>
+    <%= stylesheet_pack_tag @vue_app %>
+    <%= javascript_pack_tag @vue_app %>
+  </head>
+  <body class="<%= "p-#{params[:controller]}-#{params[:action]}" %>">
+    <%= yield %>
+    <footer class="footer">
+      <a href="//dklimanov.ru?app=<%= APPLICATION[:service_name] %>" target="_blank">dklimanov</a>, <%= Date.today.year %>
+    </footer>
+  </body>
+</html>

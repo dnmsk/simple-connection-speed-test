@@ -1,0 +1,58 @@
+<% if locals[:data].is_a?(Array) %>
+  <div data-vue-app='<%= locals[:app] %>' data-arr='<%= locals[:data].to_json %>'>
+    <% if locals[:prerender] %>
+      <% locals[:data].each do |row| %>
+        <div>
+          <% locals[:prerender].each do |(key, value)| %>
+            <% attrs = {} %>
+            <% if value.is_a?(Hash) %>
+              <%
+                value.each do |(k, v)|
+                  next if k == :html
+                  attrs[k] = v.is_a?(Proc) ? v.(row) : row[v]
+                end
+              %>
+              <%= content_tag(key, (value[:html].is_a?(Proc) ? value[:html].(row) : row[value[:html]])&.to_s&.html_safe, attrs) %>
+            <% else %>
+              <%= content_tag(key, row[value]&.to_s&.html_safe, attrs) %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <%
+    vue_attrs = { 'data-vue-app' => locals[:app] }
+    locals[:data]&.each { |(key, val)| vue_attrs["data-#{key}"] = val.to_json }
+  %>
+  <%= content_tag(:div, vue_attrs) do -%>
+    <% if locals[:prerender] %>
+      <% data = locals[:data] %>
+      <% locals[:prerender].each do |(data_key, prerender)| %>
+        <%
+          next if data[data_key].blank?
+          to_render = data[data_key].is_a?(Array) ? data[data_key] : [data[data_key]]
+          to_render.each do |row|
+        %>
+          <div>
+            <% prerender.each do |(key, value)| %>
+              <% attrs = {} %>
+              <% if value.is_a?(Hash) %>
+                <%
+                  value.each do |(k, v)|
+                    next if k == :html
+                    attrs[k] = v.is_a?(Proc) ? v(row) : row[v]
+                  end
+                %>
+                <%= content_tag(key, (value[:html].is_a?(Proc) ? value[:html].(row) : row[value[:html]])&.to_s&.html_safe, attrs) %>
+              <% else %>
+                <%= content_tag(key, row[value]&.to_s&.html_safe, attrs) %>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end -%>
+<% end %>

@@ -1,0 +1,27 @@
+default: &default
+  root_data_location: "public/storage"
+  service_name: "speed-test"
+  auth_target: "https://auth.dnmsk.ru"
+  server_name: "speed-test.dnmsk.ru"
+  root:
+    name: "dnmsk.ru"
+    href: "dnmsk.ru"
+  apps:
+    auth:
+      target: "https://auth.dnmsk.ru/api"
+
+development:
+  <<: *default
+  secret_key: 7008b41bf99e9d25e204c8be668b03a7d8337ac40e73d4f29a613204e5ced474d88476d07b2a58b5e46176ba933b28c6aae566449c9f77ffb652f9a8a97331e9
+
+test:
+  <<: *default
+  secret_key: 7008b41bf99e9d25e204c8be668b03a7d8337ac40e73d4f29a613204e5ced474d88476d07b2a58b5e46176ba933b28c6aae566449c9f77ffb652f9a8a97331e9
+
+production:
+  <<: *default
+  auth_target: "https://auth.dnmsk.ru"
+  server_name: "speed-test.dnmsk.ru"
+  root:
+    name: "dnmsk.ru"
+    href: "dnmsk.ru"

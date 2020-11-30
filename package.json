@@ -1,0 +1,17 @@
+{
+  "name": "simple_connection_speed_test_rails",
+  "private": true,
+  "dependencies": {
+    "@rails/webpacker": "5.1.1",
+    "axios": "^0.21.0",
+    "vue": "^2.6.12",
+    "vue-i18n": "^8.22.2",
+    "vue-loader": "^15.8.3",
+    "vue-template-compiler": "^2.6.12",
+    "webfontloader": "^1.6.28"
+  },
+  "version": "0.1.0",
+  "devDependencies": {
+    "webpack-dev-server": "^3.11.0"
+  }
+}
