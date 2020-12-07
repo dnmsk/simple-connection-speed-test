@@ -11,11 +11,11 @@ class TimeoutStreamWriter
   def call
     begin
       Timeout::timeout(@timeout) do
-        curr_sended = 0
+        sended = 0
         loop do
-          curr_sended += @block_size
+          sended += @block_size
           @stream.write(rnd_sequence(@block_size))
-          break if curr_sended >= @max_bytes
+          break if sended >= @max_bytes
         end
       end
     rescue => e

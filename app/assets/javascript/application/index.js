@@ -1,3 +1,5 @@
+import "./requires";
+
 import ajax from "./ajax";
 import WebFont from "webfontloader";
 

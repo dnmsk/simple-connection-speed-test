@@ -1,6 +1,9 @@
 class StreamsController < ApplicationController
   include ActionController::Live
 
+  def head
+  end
+
   def show
     response.headers['Content-Type'] = 'application/octet-stream'
     #response.headers['Content-Type'] = 'text/event-stream'
@@ -13,5 +16,9 @@ class StreamsController < ApplicationController
     ).()
   ensure
     response.stream.close
+  end
+
+  def create
+    render(json: {})
   end
 end
