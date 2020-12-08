@@ -33,6 +33,8 @@ activate_control_app
 #
 # workers ENV.fetch("WEB_CONCURRENCY") { 2 }
 
+workers 3
+
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
 # before forking the application. This takes advantage of Copy On Write

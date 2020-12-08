@@ -1,0 +1,10 @@
+.footer {
+  position: relative;
+
+  &__info {
+    display: inline-block;
+    padding: 0 1rem;
+    position: absolute;
+    right: 0;
+  }
+}

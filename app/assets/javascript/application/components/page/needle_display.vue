@@ -100,8 +100,11 @@
       });
     },
     positionAngle(points, val) {
-      let stepSize = (displayConsts.angles.to - displayConsts.angles.from) / (points.length - 1);
       let idx = points.findIndex(p => p >= val);
+      if (val == 0 || points[idx] == val) {
+        return displayConsts.angles.from;
+      }
+      let stepSize = (displayConsts.angles.to - displayConsts.angles.from) / (points.length - 1);
       let delta = 0;
       if (idx < 0) {
         idx = points.length;

@@ -1,5 +1,6 @@
 class StreamsController < ApplicationController
   include ActionController::Live
+  skip_forgery_protection
 
   def show
     return head(:ok) if request.head?

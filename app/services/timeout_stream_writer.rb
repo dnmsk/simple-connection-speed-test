@@ -1,11 +1,12 @@
 class TimeoutStreamWriter
-  BLOCK_SIZE = (10 * 1024).freeze
+  MIN_BLOCK_SIZE = (20 * 1024).freeze
+  MAX_BLOCK_SIZE = (50 * MIN_BLOCK_SIZE).freeze
 
   def initialize(stream, timeout:, block_size:, max_bytes:)
     @stream= stream
     @timeout = avg(5, timeout, 20)
-    @block_size = avg(1024, block_size, BLOCK_SIZE * 10)
-    @max_bytes = avg(@block_size, max_bytes, @block_size * 1024)
+    @block_size = avg(MIN_BLOCK_SIZE, block_size, MAX_BLOCK_SIZE * 10)
+    @max_bytes = avg(@block_size, max_bytes, MAX_BLOCK_SIZE * 1024)
   end
 
   def call
@@ -29,6 +30,8 @@ class TimeoutStreamWriter
   end
 
   def rnd_sequence(length)
-    Random.urandom(length)
+    #Random.urandom(length)
+    's' * length
+    #Array.new(length) { |i| other[i] }
   end
 end

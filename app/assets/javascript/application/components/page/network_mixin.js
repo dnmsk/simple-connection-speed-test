@@ -3,12 +3,12 @@ function cleanArray(arr) {
 }
 
 const parallelQueries = [
-  { ping: 5, cnt: 10, timeout: 10000 },
-  { ping: 50, cnt: 5, timeout: 10000 },
-  { ping: 100, cnt: 3, timeout: 10000 },
+  { ping: 5, cnt: 3, timeout: 10000 },
+  { ping: 50, cnt: 3, timeout: 10000 },
+  { ping: 100, cnt: 2, timeout: 10000 },
   { ping: 1000, cnt: 2, timeout: 10000 },
   { ping: 10000000, cnt: 1, timeout: 10000 },
-]
+];
 
 export default {
   data() {
@@ -41,10 +41,10 @@ export default {
       return new Promise(success => {
         let startPing = () => {
           let startedAt = new Date();
-          this.$ajax.head('/stream')
+          this.$ajax.head('/ping.txt')
             .then(response => {
               this.networkStat.pingResults.push(new Date() - startedAt);
-              if (cnt-- > 0) {
+              if (--cnt > 0) {
                 startPing();
               } else {
                 success();
@@ -52,6 +52,7 @@ export default {
             })
             .catch(e => startPing());
         }
+        startPing();
       });
     },
     checkDownload(params = {}) {
@@ -67,15 +68,18 @@ export default {
         let downloadStat = { startedAt: d, changedAt: d, length: 0};
         this.networkStat.downloadResults.push(downloadStat);
 
-        return this.$ajax.get('/stream', {}, {
+        return this.$ajax.get('/stream', {l: 25*1024*1024}, {
           onDownloadProgress(progressEvent) {
             if (canUpdateStat) {
               downloadStat.changedAt = new Date();
-              downloadStat.length = progressEvent.length;
+              downloadStat.length = progressEvent.loaded;
             }
           }
         }).then(response => {
-          console.log(response);
+          if (canUpdateStat) {
+            downloadStat.length = response.data.length;
+            canUpdateStat = false;
+          }
         });
       }
       return new Promise(success => {
@@ -100,14 +104,17 @@ export default {
       cleanArray(this.networkStat.uploadResults);
       let avgPing = this.avgPing;
       let parallelParams = {
-        uploadBytes: this.avgDownloadSpeedBytes * 10,
+        uploadBytes: this.avgDownloadSpeedBytes,
         ...(parallelQueries.find(el => el.ping < avgPing) || {}),
         ...params
       };
-      let uploadData = [];
-      for (let i=0; i < parallelParams.uploadBytes; i++) {
-        uploadData.push(i);
+      let arrayBytes = [];
+      for (let i=0; i < parallelParams.uploadBytes; i+=4) {
+        arrayBytes.push(i);
       }
+      const uploadData = new FormData();
+      uploadData.append('arrayBytes[]', arrayBytes);
+
       let canUpdateStat = true;
       let uploadFn = () => {
         let d = new Date();
@@ -116,18 +123,22 @@ export default {
 
         return this.$ajax.post('/stream', uploadData, {
           onUploadProgress(progressEvent) {
+            console.log(progressEvent);
             if (canUpdateStat) {
               uploadStat.changedAt = new Date();
-              uploadStat.length = progressEvent.length;
+              uploadStat.length = progressEvent.loaded;
             }
           }
         }).then(response => {
-          console.log(response);
+          if (canUpdateStat) {
+            canUpdateStat = false;
+          }
         });
       }
       return new Promise(success => {
-        let cnt = parallelParams && parallelParams.cnt || 1;
-        for (let i = cnt; i >0; i--) {
+        let cnt = 1;
+        //let cnt = Math.max(parseInt(parallelParams && parallelParams.cnt || 1)/2, 1);
+        for (let i = cnt; i > 0; i--) {
           uploadFn().then(() => {
             if (--cnt == 0) {
               success();
