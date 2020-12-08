@@ -1,6 +1,6 @@
 <template>
   <div class="needle-display">
-    <canvas class="needle-display__canvas" ref="canvas" style="height: 500px; width: 500px; display: block; margin: 0 auto;" />
+    <canvas class="needle-display__canvas" ref="canvas" />
   </div>
 </template>
 
@@ -24,13 +24,13 @@
       miniDialWidth: 5,
       markLength: 25,
       markWidth: 2,
-      markFont: "700 20px Arial",
+      markFont: "700 1.5rem Arial",
       needleStyle: "black",
       needleWidth: 2,
       numberValueColor: "black",
-      numberValueStyle: "700 40px Arial",
+      numberValueStyle: "700 3.5rem Arial",
       numberBpsColor: "black",
-      numberBpsStyle: "700 25px Arial",
+      numberBpsStyle: "700 2rem Arial",
     },
     angles: {
       from: 1/12 * Math.PI + Math.PI / 2,
@@ -69,7 +69,8 @@
       ctx.beginPath();
       ctx.lineWidth = displayConsts.styles.miniDialWidth;
       //ctx.shadowBlur = displayConsts.styles.miniDialShadow;
-      ctx.shadowColor = "";
+      ctx.shadowBlur = "";
+      //ctx.shadowColor = "";
       ctx.strokeStyle = "red";
 
       ctx.arc(xCenter, yCenter, 0.4*xCenter, 0, 2*Math.PI);
@@ -137,7 +138,8 @@
         canvas: null,
         canvasContext: null,
         colors: {},
-        maxValue: this.value
+        maxValue: this.value,
+        intValue: this.value
       }
     },
     mounted() {
@@ -148,8 +150,9 @@
     },
     watch: {
       'value'() {
-        if (this.maxValue < this.value) {
-          this.maxValue = this.value;
+        this.intValue = parseFloat(this.value);
+        if (this.maxValue < this.intValue) {
+          this.maxValue = this.intValue;
         }
         this.redraw();
       }
@@ -162,12 +165,15 @@
         }
         this.redraw();
       },
+      reset() {
+        this.intValue = this.maxValue = 0;
+        this.redraw();
+      },
       redraw() {
-        console.log(this);
         this.canvas.height = this.canvas.scrollHeight;
         this.canvas.width = this.canvas.scrollWidth;
         let maxValAngle = drawFunctions.positionAngle(this.points, this.maxValue);
-        let currentValAngle = drawFunctions.positionAngle(this.points, this.value);
+        let currentValAngle = drawFunctions.positionAngle(this.points, this.intValue);
         drawFunctions.dialMarks(this.canvas, this.canvasContext, this.points);
         drawFunctions.dial(this.canvas, this.canvasContext,
           this.colors.total,
@@ -186,7 +192,7 @@
         );
         drawFunctions.needle(this.canvas, this.canvasContext, currentValAngle);
         drawFunctions.miniDial(this.canvas, this.canvasContext);
-        drawFunctions.number(this.canvas, this.canvasContext, this.value, this.substr);
+        drawFunctions.number(this.canvas, this.canvasContext, this.intValue, this.substr);
       }
     }
   }

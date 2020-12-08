@@ -1,5 +1,17 @@
-<%= render('application/vue_app',
-  locals: {
-    app: 'Page',
-  })
-%>
+<section class="app locale-<%= params[:locale] %>">
+  <header class="app-header">
+    <div class="app-header__logo">
+      <a href="/" class="app-header__logo-service"><%= APPLICATION[:service_name] %></a>
+      <div class="app-header__logo-root">
+        <a href="//<%= APPLICATION[:root][:href] %>/">by <%= APPLICATION[:root][:name] %></a>
+      </div>
+    </div>
+    <div class="app-header__user">
+    </div>
+  </header>
+  <%= render('application/vue_app',
+    locals: {
+      app: 'Page',
+    })
+  %>
+</section>
