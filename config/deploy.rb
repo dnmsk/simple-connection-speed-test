@@ -57,6 +57,8 @@ set :linked_dirs, fetch(:linked_dirs, []).push(
 # Default value for keep_releases is 5
 set :keep_releases, 5
 
+set :assets_prefix, 'packs'
+
 def current_branch
   ENV['BRANCH'] || `git rev-parse --abbrev-ref HEAD`.chomp
 end

@@ -12,7 +12,7 @@ app_root = "/home/apps/#{app_name}/#{rack_env}"
 app_path = "#{app_root}/current"
 shared_path = "#{app_root}/shared"
 
-threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
+threads_count = ENV.fetch("RAILS_MAX_THREADS") { 15 }
 threads threads_count, threads_count
 
 environment rack_env
@@ -33,7 +33,7 @@ activate_control_app
 #
 # workers ENV.fetch("WEB_CONCURRENCY") { 2 }
 
-workers 3
+#workers 3
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code

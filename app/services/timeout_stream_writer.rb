@@ -30,8 +30,8 @@ class TimeoutStreamWriter
   end
 
   def rnd_sequence(length)
-    #Random.urandom(length)
-    's' * length
+    Random.urandom(length)
+    #'s' * length
     #Array.new(length) { |i| other[i] }
   end
 end

@@ -119,7 +119,6 @@ export default {
 
         return this.$ajax.post('/stream', uploadData, {
           onUploadProgress(progressEvent) {
-            console.log(progressEvent);
             if (canUpdateStat) {
               uploadStat.changedAt = new Date();
               uploadStat.length = progressEvent.loaded;
