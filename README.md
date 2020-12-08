@@ -20,7 +20,7 @@ $ yarn && bundle
 
 #### 2. Enjoy!
 ```sh
-$ rails s --no-log-to-stdout -p 3000
+$ rails s --no-log-to-stdout -b 0.0.0.0 -p 3000
 ```
 
 **ToDo**

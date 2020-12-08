@@ -108,12 +108,8 @@ export default {
         ...(parallelQueries.find(el => el.ping < avgPing) || {}),
         ...params
       };
-      let arrayBytes = [];
-      for (let i=0; i < parallelParams.uploadBytes; i+=4) {
-        arrayBytes.push(i);
-      }
       const uploadData = new FormData();
-      uploadData.append('arrayBytes[]', arrayBytes);
+      uploadData.append('arrayBytes[]', [...Array(parseInt(parallelParams.uploadBytes)).keys()]);
 
       let canUpdateStat = true;
       let uploadFn = () => {
