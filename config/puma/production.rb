@@ -7,7 +7,7 @@
 
 rack_env = ENV.fetch("RAILS_ENV")
 
-app_name = 'ru_dnmsk_speed_test'
+app_name = 'ru_dnmsk_speedtest'
 app_root = "/home/apps/#{app_name}/#{rack_env}"
 app_path = "#{app_root}/current"
 shared_path = "#{app_root}/shared"
@@ -17,7 +17,7 @@ threads threads_count, threads_count
 
 environment rack_env
 
-bind "unix://#{shared_path}/tmp/sockets/unicorn.socket"
+bind "unix://#{shared_path}/tmp/sockets/webserver.socket"
 
 stdout_redirect "#{shared_path}/log/puma.stdout.log", "#{shared_path}/log/puma.stderr.log", true
 

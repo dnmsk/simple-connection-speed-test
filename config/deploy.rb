@@ -15,7 +15,7 @@ set :ssh_options, {
   #proxy: Net::SSH::Proxy::Command.new('ssh devel@dklimanov.ru -W %h:%p')
 }
 
-set :application, 'ru_dnmsk_speed_test'
+set :application, 'ru_dnmsk_speedtest'
 set :repo_url, ->{ 'git@github.com:dnmsk/simple-connection-speed-test.git' }
 set :rack_env, fetch(:stage)
 
